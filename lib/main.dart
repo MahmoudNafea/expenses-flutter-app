@@ -52,12 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime chosenDate) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: chosenDate,
     );
     setState(() {
       transactions.add(newTx);
@@ -71,6 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
         return NewTransaction(_addNewTransaction);
       },
     );
+  }
+
+  void deleteTransaction(String id) {
+    setState(() {
+      transactions.removeWhere((element) => element.id == id);
+    });
   }
 
   ///to do proper popup in web we use show model and return alert dialog
@@ -89,12 +95,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Chart(recentTransactions),
-            TransactionList(transactions),
+            TransactionList(transactions, deleteTransaction),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        backgroundColor: Color.fromRGBO(240, 229, 7, 15),
         onPressed: () => startNewTransaction(context),
       ),
     );
